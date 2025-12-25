@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-body{font-family:'Inter',sans-serif;margin:0;background:#fdfdfd;color:#333;overflow-x:hidden;}
+body{font-family:'Inter',sans-serif;margin:0;background:#fdfdfd;color:#333;overflow-x:hidden;scroll-behavior:smooth;}
 header{background:#fff;padding:20px 50px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 20px rgba(0,0,0,.05);position:sticky;top:0;z-index:999;}
 .logo{font-size:28px;font-weight:700;color:#ff914d;letter-spacing:1px;}
 nav a{text-decoration:none;margin:0 18px;color:#333;font-weight:500;transition:.3s;}
@@ -18,7 +18,7 @@ nav a:hover{color:#ff7300;}
 .btn{background:#ff914d;padding:16px 32px;color:#fff;border-radius:12px;display:inline-block;margin-top:30px;text-decoration:none;font-weight:600;transition:.4s;}
 .btn:hover{background:#ff7300;transform:scale(1.08);}
 .section{padding:90px 40px;max-width:1200px;margin:auto;position:relative;}
-.section h2{font-size:36px;color:#ff7300;margin-bottom:30px;position:relative;}
+.section h2{font-size:36px;color:#ff7300;margin-bottom:30px;position:relative;text-align:center;}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:30px;}
 .card{background:#fff;border-radius:16px;padding:30px;box-shadow:0 8px 25px rgba(0,0,0,.08);transition:.4s;text-align:center;}
 .card:hover{transform:translateY(-8px) scale(1.02);}
@@ -30,7 +30,10 @@ footer{text-align:center;padding:50px;background:#fff;border-top:1px solid #eee;
 .feature h3{color:#ff7300;margin-bottom:10px;font-size:20px;}
 .feature p{opacity:.85;font-size:16px;}
 .feature:hover{transform:translateY(-6px) scale(1.03);box-shadow:0 10px 25px rgba(0,0,0,.1);}
-/* Animations */
+.contact-form{max-width:600px;margin:auto;display:flex;flex-direction:column;gap:15px;}
+.contact-form input, .contact-form textarea{padding:15px;border-radius:10px;border:1px solid #ccc;font-size:16px;}
+.contact-form button{background:#ff914d;color:#fff;padding:15px;font-weight:600;border:none;border-radius:10px;cursor:pointer;transition:.3s;}
+.contact-form button:hover{background:#ff7300;transform:scale(1.05);}
 @keyframes fadeInDown {0%{opacity:0;transform:translateY(-30px);}100%{opacity:1;transform:translateY(0);}}
 @keyframes fadeInUp {0%{opacity:0;transform:translateY(30px);}100%{opacity:1;transform:translateY(0);}}
 </style>
@@ -43,6 +46,7 @@ footer{text-align:center;padding:50px;background:#fff;border-top:1px solid #eee;
 <a href="#about">Про платформу</a>
 <a href="#recruit">Для рекрутерів</a>
 <a href="#company">Для замовників</a>
+<a href="#features">Переваги</a>
 <a href="#contact">Контакти</a>
 </nav>
 </header>
@@ -50,15 +54,57 @@ footer{text-align:center;padding:50px;background:#fff;border-top:1px solid #eee;
 <section class="hero">
 <h1 class="hero-title">Karierok — кар'єра, що працює</h1>
 <p>Ми об'єднуємо рекрутерів із компаніями. Платформа, де підбір персоналу стає швидким, вигідним і зручним.</p>
-<a class="btn cta-btn">Приєднатись до мережі рекрутерів</a>
+<a class="btn cta-btn" href="#recruit">Приєднатись до мережі рекрутерів</a>
 </section>
 
 <section class="section" id="about">
 <h2>Про платформу</h2>
-<p>Karierok — це екосистема для HR-спеціалістів. Ми створюємо команду рекрутерів, надаємо вакансії та забезпечуємо потік замовників.</p>
+<p>Karierok — це екосистема для HR-спеціалістів та компаній. Ми надаємо повний спектр послуг для швидкого та ефективного рекрутингу: вакансії, аналітика, навчання та ком'юніті рекрутерів.</p>
 </section>
 
-<section id="features" class="section" style="background:#fff9f2;">
+<section class="section" id="recruit">
+<h2>Для рекрутерів</h2>
+<div class="grid">
+<div class="card">
+<h3>Стати частиною спільноти</h3>
+<p>Приєднуйся до мережі професійних рекрутерів та отримуй доступ до вакансій та бонусів.</p>
+<a class="btn" href="#contact">Залишити заявку</a>
+</div>
+<div class="card">
+<h3>Отримуй винагороду</h3>
+<p>Отримуй % від кожного закритого кандидата. Прозора система платежів і швидкі виплати.</p>
+<a class="btn" href="#contact">Дізнатись більше</a>
+</div>
+<div class="card">
+<h3>Освітні матеріали</h3>
+<p>Міні-курси, гайди, лайфхаки та обмін досвідом всередині платформи.</p>
+<a class="btn" href="#contact">Долучитись</a>
+</div>
+</div>
+</section>
+
+<section class="section" id="company" style="background:#fff9f2;">
+<h2>Для замовників</h2>
+<div class="grid">
+<div class="card">
+<h3>Швидкий пошук кандидатів</h3>
+<p>Знаходь кваліфікованих спеціалістів через мережу рекрутерів. Економія часу та ресурсів.</p>
+<a class="btn" href="#contact">Залишити заявку</a>
+</div>
+<div class="card">
+<h3>Аналітика та звіти</h3>
+<p>Отримуй детальні звіти по рекрутингу та рекомендації для оптимізації процесу.</p>
+<a class="btn" href="#contact">Дізнатись більше</a>
+</div>
+<div class="card">
+<h3>Бонуси та промо</h3>
+<p>Спеціальні пропозиції та подарунки для активних компаній-партнерів.</p>
+<a class="btn" href="#contact">Долучитись</a>
+</div>
+</div>
+</section>
+
+<section id="features" class="section">
 <h2>Переваги Karierok</h2>
 <div class="features">
 <div class="feature">
@@ -69,7 +115,7 @@ footer{text-align:center;padding:50px;background:#fff;border-top:1px solid #eee;
 <div class="feature">
 <img src="https://img.icons8.com/fluency/48/teamwork.png" alt="team">
 <h3>Спільнота рекрутерів</h3>
-<p>Ми створюємо не просто команду — а повноцінну спільноту професіоналів.</p>
+<p>Ми створюємо повноцінну спільноту професіоналів.</p>
 </div>
 <div class="feature">
 <img src="https://img.icons8.com/fluency/48/money.png" alt="money">
@@ -92,6 +138,16 @@ footer{text-align:center;padding:50px;background:#fff;border-top:1px solid #eee;
 <p>Спеціальні пропозиції, новорічні подарунки та промо для активних рекрутерів.</p>
 </div>
 </div>
+</section>
+
+<section class="section" id="contact">
+<h2>Контакти</h2>
+<form class="contact-form">
+<input type="text" placeholder="Ваше ім'я" required>
+<input type="email" placeholder="Email" required>
+<textarea placeholder="Повідомлення" rows="5" required></textarea>
+<button type="submit">Відправити</button>
+</form>
 </section>
 
 <footer>
