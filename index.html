@@ -142,26 +142,38 @@ footer{text-align:center;padding:50px;background:#fff;border-top:1px solid #eee;
 
 <section class="section" id="contact">
 <h2>Контакти</h2>
-<form action="https://getform.io/f/allgzjza" method="POST">
-    <input type="text" name="name">
-    <input type="email" name="email">
-    <input type="text" name="message">
-    <!-- add hidden Honeypot input to prevent spams -->
-    <input type="hidden" name="_gotcha" style="display:none !important">
-    <!-- checkbox handle -->
+<form action="https://getform.io/f/allgzjza" method="POST" class="contact-form" style="max-width:600px;margin:auto;display:flex;flex-direction:column;gap:15px;">
+  <!-- Текстове поле Ім'я -->
+  <input type="text" name="name" placeholder="Ваше ім'я" required style="padding:15px;border-radius:10px;border:1px solid #ccc;font-size:16px;">
+  
+  <!-- Текстове поле Email -->
+  <input type="email" name="email" placeholder="Ваш Email" required style="padding:15px;border-radius:10px;border:1px solid #ccc;font-size:16px;">
+  
+  <!-- Повідомлення -->
+  <textarea name="message" placeholder="Повідомлення" rows="5" required style="padding:15px;border-radius:10px;border:1px solid #ccc;font-size:16px;"></textarea>
+  
+  <!-- Honeypot для спаму -->
+  <input type="hidden" name="_gotcha" style="display:none !important">
+  
+  <!-- Підписка -->
+  <label style="display:flex;align-items:center;gap:8px;font-size:15px;cursor:pointer;">
     <input type="checkbox" name="subscribe" value="yes" checked>
-    <input type="hidden" name="subscribe" value="no">
-    <!-- radio button handle -->
-    <input type="radio" name="gender" value="male" checked>
-    <input type="radio" name="gender" value="female">
-    <input type="radio" name="gender" value="other">
-    <!-- select field handle -->
-    <select name="work-experience">
-        <option value="one-year">0-1 years</option>
-        <option value="one-five-years">1-5 years</option>
-    </select>
-    <button type="submit">Send</button>
+    Підписатися на оновлення
+  </label>
+  <input type="hidden" name="subscribe" value="no">
+  
+  <!-- Стать -->
+  <label style="display:flex;align-items:center;gap:10px;font-size:15px;">Стать:</label>
+  <div style="display:flex;gap:15px;margin-bottom:10px;">
+    <label><input type="radio" name="gender" value="male" checked> Чоловіча</label>
+    <label><input type="radio" name="gender" value="female"> Жіноча</label>
+    <label><input type="radio" name="gender" value="other"> Інше</label>
+  </div>
+  
+  <!-- Кнопка відправки -->
+  <button type="submit" style="background:#ff914d;color:#fff;padding:15px;font-weight:600;border:none;border-radius:10px;cursor:pointer;transition:.3s;">Відправити</button>
 </form>
+
 </section>
 
 <footer>
