@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>KarierOK | Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        [x-cloak] { display: none !important; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 10px; }
+
+        .dataTables_wrapper { color: inherit !important; padding: 0.5rem; background: var(--card); border-radius: 0.75rem; border: 1px solid rgba(255,255,255,0.05); }
+        table.dataTable thead th { border-bottom: 1px solid rgba(255,255,255,0.1) !important; font-size: 0.75rem; color: #94a3b8; }
+        table.dataTable tbody td { border-bottom: 1px solid rgba(255,255,255,0.05) !important; font-size: 0.85rem; padding: 8px !important; }
+        .dataTables_filter input { background: rgba(255,255,255,0.05) !important; border: 1px solid rgba(255,255,255,0.1) !important; border-radius: 4px; color: white; }
+        
+        .card-glass {
+            background: var(--card);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+    </style>
+</head>
+<body x-data="dashboard()" x-init="init()" class="text-slate-200 antialiased min-h-screen pb-10 transition-colors duration-700">
+
+<div class="max-w-7xl mx-auto p-4 md:p-6">
+
+    <header class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight text-white italic">KarierOK</h1>
+            <p class="text-slate-400 text-xs flex items-center gap-1">
+                <i data-lucide="shield-check" class="w-3 h-3 text-emerald-500"></i> Admin Panel
+            </p>
+        </div>
+        
+        <div class="flex items-center gap-3">
+            <div class="flex bg-black/20 p-1 rounded-xl border border-white/5">
+                <template x-for="(t, key) in themes" :key="key">
+                    <button @click="setTheme(key)" class="w-6 h-6 rounded-full m-1 transition-transform hover:scale-110"
+                            :style="`background: ${t.accent}`"
+                            :class="currentTheme === key ? 'ring-2 ring-white ring-offset-2 ring-offset-slate-900' : 'opacity-40'">
+                    </button>
+                </template>
+            </div>
+        </div>
+    </header>
+
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <template x-for="(c, i) in money" :key="i">
+            <div class="card-glass rounded-xl p-4 relative overflow-hidden">
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest" x-text="c.label"></p>
+                <h3 class="text-xl font-bold mt-1 text-white" x-text="formatCurrency(c.value)"></h3>
+                <div class="h-10 w-full mt-2">
+                    <canvas :id="c.spark"></canvas>
+                </div>
+            </div>
+        </template>
+    </div>
+
+    <div class="grid lg:grid-cols-12 gap-6">
+        
+        <div class="lg:col-span-8">
+            <div class="flex items-center justify-between mb-3 px-1">
+                <h2 class="text-lg font-semibold flex items-center gap-2 text-indigo-300">
+                    <i data-lucide="layout-list" class="w-5 h-5"></i> Вакансии
+                </h2>
+            </div>
+            <div class="rounded-xl overflow-hidden shadow-xl border border-white/5 bg-slate-900/50">
+                <table id="vacanciesTable" class="display w-full"></table>
+            </div>
+        </div>
+
+        <div class="lg:col-span-4">
+            <div class="flex flex-col gap-4">
+                <div class="flex p-1 bg-black/30 rounded-lg border border-white/5">
+                    <button @click="activeTab = 'hr'" 
+                            :class="activeTab === 'hr' ? 'bg-white/10 text-white shadow-sm' : 'text-slate-500'"
+                            class="flex-1 py-2 text-xs font-bold rounded-md transition-all uppercase tracking-tighter">
+                        HR Команда
+                    </button>
+                    <button @click="activeTab = 'mark'" 
+                            :class="activeTab === 'mark' ? 'bg-white/10 text-white shadow-sm' : 'text-slate-500'"
+                            class="flex-1 py-2 text-xs font-bold rounded-md transition-all uppercase tracking-tighter">
+                        Маркетологи
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 max-h-[500px] overflow-y-auto pr-1">
+                    <template x-for="member in (activeTab === 'hr' ? teamHR : teamMark)" :key="member.name">
+                        <div class="card-glass rounded-xl p-3 flex flex-col items-center border border-white/5 hover:border-white/10 transition-colors">
+                            <span class="text-[10px] font-bold text-slate-400 truncate w-full text-center mb-2" x-text="member.name"></span>
+                            <div class="relative w-16 h-16">
+                                <canvas :id="'kpi-' + member.name.replace('@','')"></canvas>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <span class="text-xs font-bold" x-text="member.closed"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function dashboard() {
+    return {
+        currentTheme: 'slate',
+        activeTab: 'hr', // 'hr' или 'mark'
+        theme: {},
+        money: [
+            { label: 'Баланс', spark: 's1', value: 0, trend: 1 },
+            { label: 'Доход', spark: 's2', value: 0, trend: 1 },
+            { label: 'Расход', spark: 's3', value: 0, trend: -1 },
+            { label: 'Чистая', spark: 's4', value: 0, trend: 1 },
+        ],
+        teamHR: [
+            { name: 'Софія', closed: 0, total: 2 },
+            { name: '@R8_imbo', closed: 0, total: 2 },
+            { name: '@viiiiiiskkks', closed: 0, total: 2 },
+            { name: 'Masha_cuberz', closed: 0, total: 2 },
+            { name: 'Gadalca_1', closed: 0, total: 2 },
+            { name: '@ksenia_shelenko', closed: 0, total: 2 },
+            { name: 'socaup', closed: 0, total: 2 },
+            { name: 'HRmanager160', closed: 0, total: 2 },
+            { name: 'bysayles', closed: 0, total: 2 },
+            { name: 'miss_stacey', closed: 0, total: 2 },
+            { name: 'd11shess', closed: 0, total: 2 },
+        ],
+        teamMark: [
+            { name: '@viiiiiiskkks', closed: 0, total: 10 },
+            { name: '@stannislavovna', closed: 0, total: 10 },
+            { name: '@Arilauu', closed: 0, total: 10 },
+            { name: '@vikaaaaqq', closed: 0, total: 10 },
+            { name: '@kovcch', closed: 0, total: 10 },
+            { name: '@R8_imbo', closed: 0, total: 10 },
+            { name: '@dianabuchko', closed: 0, total: 10 },
+            { name: '@Miffaxas', closed: 0, total: 10 },
+        ],
+        vacanciesData: [
+            { ID: 1, Название: 'Email Marketing', Стек: 'Klaviyo, MJML', Локация: 'Remote', Статус: 'Active' },
+            { ID: 2, Название: 'Sales Manager', Стек: 'English B2+', Локация: 'Киев', Статус: 'Urgent' },
+
+        ],
+        charts: {},
+        themes: {
+            slate:    { bg: '#0b0f1a', card: '#111827', accent: '#6366f1', chart: '#818cf8' },
+            emerald:  { bg: '#061a14', card: '#0a261f', accent: '#10b981', chart: '#34d399' },
+            rose:     { bg: '#1a060f', card: '#290a16', accent: '#f43f5e', chart: '#fb7185' }
+        },
+
+        init() {
+            this.setTheme(this.currentTheme);
+            this.$nextTick(() => {
+                lucide.createIcons();
+                this.initMiniCharts();
+                this.initAllKPIs();
+                this.loadVacanciesTable();
+            });
+
+            // Следим за сменой таба, чтобы обновить иконки и графики
+            this.$watch('activeTab', () => {
+                this.$nextTick(() => this.initAllKPIs());
+            });
+        },
+
+        setTheme(key) {
+            this.currentTheme = key;
+            this.theme = this.themes[key];
+            document.body.style.background = this.theme.bg;
+            document.documentElement.style.setProperty('--card', this.theme.card);
+            setTimeout(() => this.updateAllCharts(), 50);
+        },
+
+        formatCurrency(val) {
+            return new Intl.NumberFormat('uk-UA', { style: 'currency', currency: 'UAH', maximumFractionDigits: 0 }).format(val);
+        },
+
+        initMiniCharts() {
+            this.money.forEach((item) => {
+                const ctx = document.getElementById(item.spark).getContext('2d');
+                this.charts[item.spark] = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: [1,2,3,4,5,6],
+                        datasets: [{
+                            data: [10, 25, 15, 35, 20, 45],
+                            borderColor: this.theme.chart,
+                            borderWidth: 2,
+                            pointRadius: 0,
+                            tension: 0.4,
+                            fill: true,
+                            backgroundColor: this.hexToRgba(this.theme.chart, 0.1)
+                        }]
+                    },
+                    options: { maintainAspectRatio: false, plugins: { legend: false }, scales: { x: { display: false }, y: { display: false } } }
+                });
+            });
+        },
+
+        initAllKPIs() {
+            const list = this.activeTab === 'hr' ? this.teamHR : this.teamMark;
+            list.forEach(member => {
+                const canvasId = 'kpi-' + member.name.replace('@','');
+                const canvas = document.getElementById(canvasId);
+                if (!canvas) return;
+                
+                if (this.charts[canvasId]) this.charts[canvasId].destroy();
+                
+                this.charts[canvasId] = new Chart(canvas.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        datasets: [{
+                            data: [member.closed, member.total - member.closed],
+                            backgroundColor: [this.theme.accent, 'rgba(255,255,255,0.05)'],
+                            borderWidth: 0,
+                            borderRadius: 4
+                        }]
+                    },
+                    options: { cutout: '80%', plugins: { legend: false } }
+                });
+            });
+        },
+
+        loadVacanciesTable() {
+            $('#vacanciesTable').DataTable({
+                data: this.vacanciesData,
+                columns: [
+                    { data: 'ID', title: 'ID' },
+                    { data: 'Название', title: 'Позиция' },
+                    { data: 'Локация', title: 'Город' },
+                    { 
+                        data: 'Статус', 
+                        title: 'Статус',
+                        render: (data) => `<span class="text-[9px] px-2 py-0.5 rounded border border-white/10 bg-white/5 uppercase font-bold">${data}</span>`
+                    }
+                ],
+                dom: 'ftp',
+                pageLength: 6,
+                language: { search: "" }
+            });
+        },
+
+        updateAllCharts() {
+            Object.keys(this.charts).forEach(key => {
+                const chart = this.charts[key];
+                if (key.startsWith('s')) {
+                    chart.data.datasets[0].borderColor = this.theme.chart;
+                    chart.data.datasets[0].backgroundColor = this.hexToRgba(this.theme.chart, 0.1);
+                } else if (key.startsWith('kpi')) {
+                    chart.data.datasets[0].backgroundColor[0] = this.theme.accent;
+                }
+                chart.update('none');
+            });
+        },
+
+        hexToRgba(hex, alpha) {
+            const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        }
+    }
+}
+</script>
+</body>
+</html>

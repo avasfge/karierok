@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>KarierOK | Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            background-color: #0b0f1a;
+            background-image: radial-gradient(circle at 50% 50%, #1e293b 0%, #0b0f1a 100%);
+        }
+        .login-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen text-slate-200 antialiased">
+
+<div x-data="loginForm()" class="w-full max-w-md p-6">
+    <div class="login-card rounded-3xl p-8 shadow-2xl">
+        
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-bold tracking-tighter text-white italic">KarierOK</h1>
+            <p class="text-slate-400 text-sm mt-2 font-medium">Система управления агентством</p>
+        </div>
+
+        <form @submit.prevent="handleLogin" class="space-y-6">
+            <div>
+                <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 ml-1">Логин</label>
+                <div class="relative">
+                    <i data-lucide="user" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500"></i>
+                    <input type="text" x-model="username" required
+                           class="w-full bg-black/30 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 ml-1">Пароль</label>
+                <div class="relative">
+                    <i data-lucide="lock" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500"></i>
+                    <input type="password" x-model="password" required
+                           class="w-full bg-black/30 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+                </div>
+            </div>
+
+            <div x-show="error" x-transition x-cloak class="bg-red-500/10 border border-red-500/20 text-red-400 text-xs p-3 rounded-lg text-center font-medium">
+                Неверный логин или пароль
+            </div>
+
+            <button type="submit" 
+                    class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl shadow-lg shadow-indigo-500/20 transition-all active:scale-[0.98]">
+                Войти в систему
+            </button>
+        </form>
+
+        <div class="mt-8 text-center text-[10px] text-slate-500 uppercase tracking-widest">
+            &copy; 2026 KarierOK Intelligence
+        </div>
+    </div>
+</div>
+
+<script>
+    function loginForm() {
+        return {
+            username: '',
+            password: '',
+            error: false,
+
+            handleLogin() {
+                this.error = false;
+                
+                // Логика перенаправления
+                if (this.username === 'Admin' && this.password === '12390!') {
+                    window.location.href = 'admin.html';
+                } 
+                else if (this.username === 'HR' && this.password === 'HRKarierOK') {
+                    window.location.href = 'hr.html';
+                } 
+                else if (this.username === 'Smm' && this.password === 'SmmKarierOK') {
+                    window.location.href = 'smm.html';
+                } 
+                else {
+                    this.error = true;
+                    // Тряска формы при ошибке
+                    setTimeout(() => { this.error = false; }, 3000);
+                }
+            },
+            init() {
+                lucide.createIcons();
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
