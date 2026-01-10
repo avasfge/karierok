@@ -10,7 +10,7 @@
     <style>
         body {
             font-family: 'Manrope', sans-serif;
-            background-color: #0f172a; /* Темний сучасний фон */
+            background-color: #0f172a;
             color: #f8fafc;
         }
         .glass-container {
@@ -39,13 +39,14 @@
             background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(37, 99, 235, 0.2));
             border-color: #8b5cf6;
         }
-        .shimmer {
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-            background-size: 200% 100%;
-            animation: shimmer 2s infinite;
+        .loader { 
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s linear infinite; 
         }
-        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
-        .loader { border-top-color: transparent; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
@@ -60,35 +61,34 @@
 
     <div class="glass-container w-full max-w-md p-6 shadow-2xl relative overflow-hidden">
         <div id="step1">
-            <h2 class="text-xl font-semibold mb-6 text-center">Хто ви сьогодні?</h2>
+            <h2 class="text-xl font-semibold mb-6 text-center text-white">Хто ви сьогодні?</h2>
             <div class="grid gap-4">
-                <div onclick="setRole('recruiter')" class="role-card p-5 rounded-2xl cursor-pointer flex items-center space-x-4">
+                <div onclick="setRole('recruiter')" class="role-card p-5 rounded-2xl cursor-pointer flex items-center space-x-4 hover:bg-white/5">
                     <div class="p-3 bg-blue-500/20 text-blue-400 rounded-xl"><i data-lucide="search"></i></div>
-                    <div><b class="block">Рекрутер</b><span class="text-xs text-slate-500">Шукаю спеціалістів</span></div>
+                    <div><b class="block text-white">Рекрутер</b><span class="text-xs text-slate-500">Шукаю спеціалістів</span></div>
                 </div>
-                <div onclick="setRole('candidate')" class="role-card p-5 rounded-2xl cursor-pointer flex items-center space-x-4">
+                <div onclick="setRole('candidate')" class="role-card p-5 rounded-2xl cursor-pointer flex items-center space-x-4 hover:bg-white/5">
                     <div class="p-3 bg-emerald-500/20 text-emerald-400 rounded-xl"><i data-lucide="user"></i></div>
-                    <div><b class="block">Кандидат</b><span class="text-xs text-slate-500">Шукаю нові виклики</span></div>
+                    <div><b class="block text-white">Кандидат</b><span class="text-xs text-slate-500">Шукаю нові виклики</span></div>
                 </div>
-                <div onclick="setRole('client')" class="role-card p-5 rounded-2xl cursor-pointer flex items-center space-x-4">
+                <div onclick="setRole('client')" class="role-card p-5 rounded-2xl cursor-pointer flex items-center space-x-4 hover:bg-white/5">
                     <div class="p-3 bg-amber-500/20 text-amber-400 rounded-xl"><i data-lucide="zap"></i></div>
-                    <div><b class="block">Замовник</b><span class="text-xs text-slate-500">Потрібна команда</span></div>
+                    <div><b class="block text-white">Замовник</b><span class="text-xs text-slate-500">Потрібна команда</span></div>
                 </div>
             </div>
         </div>
 
         <form id="mainForm" class="hidden space-y-5">
             <input type="hidden" name="role" id="roleInput">
-            
             <div id="dynamicFields" class="space-y-4"></div>
 
-            <button type="button" id="submitBtn" onclick="sendData()" class="w-full bg-gradient-to-r from-violet-600 to-blue-600 py-4 rounded-2xl font-bold text-lg shadow-lg hover:shadow-violet-500/20 transition-all flex items-center justify-center space-x-2">
-                <span>Надіслати заявку</span>
+            <button type="button" id="submitBtn" onclick="sendData()" class="w-full bg-gradient-to-r from-violet-600 to-blue-600 py-4 rounded-2xl font-bold text-lg shadow-lg hover:shadow-violet-500/20 transition-all flex items-center justify-center space-x-2 text-white">
+                <span id="btnText">Надіслати заявку</span>
                 <i data-lucide="arrow-right" class="w-5 h-5"></i>
             </button>
             
-            <button type="button" onclick="location.reload()" class="w-full text-slate-500 text-sm font-medium py-2">
-                Повернутись назад
+            <button type="button" onclick="goBack()" class="w-full text-slate-500 text-sm font-medium py-2 hover:text-slate-300 transition-colors">
+                ← Повернутись назад
             </button>
         </form>
 
@@ -97,12 +97,15 @@
                 <i data-lucide="check-circle-2" class="w-12 h-12"></i>
             </div>
             <h2 class="text-2xl font-bold text-white">Успішно!</h2>
-            <p class="text-slate-400">Ми отримали ваші дані. Наш менеджер зв'яжеться з вами найближчим часом.</p>
+            <p class="text-slate-400 text-balance px-4">Ми отримали ваші дані. Наш менеджер зв'яжеться з вами найближчим часом.</p>
+            <button onclick="goBack()" class="mt-4 text-violet-400 font-bold underline">На головну</button>
         </div>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
+        const API_URL = "https://script.google.com/macros/s/AKfycbyUXCMPLFRfK7pWt_RAOnqBxDf0smkxeGLLJktstt4pwJjjGri_FbHl_T4q7HB5vu8LEg/exec";
+        
         tg.expand();
         lucide.createIcons();
 
@@ -145,6 +148,14 @@
             fields.innerHTML = html;
         }
 
+        function goBack() {
+            tg.HapticFeedback.impactOccurred('light');
+            document.getElementById('mainForm').classList.add('hidden');
+            document.getElementById('success').classList.add('hidden');
+            document.getElementById('step1').classList.remove('hidden');
+            document.getElementById('mainForm').reset();
+        }
+
         function calc() {
             const v = document.getElementById('vCount').value;
             let p = 8000;
@@ -154,26 +165,41 @@
             tg.HapticFeedback.selectionChanged();
         }
 
-        function sendData() {
+        async function sendData() {
             const btn = document.getElementById('submitBtn');
             const form = document.getElementById('mainForm');
-            const formData = Object.fromEntries(new FormData(form).entries());
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
 
-            // Перевірка на заповненість
-            if(!formData.name && !formData.clientName && !formData.vacancy) {
-                tg.HapticFeedback.notificationOccurred('error');
-                return alert('Будь ласка, заповніть обов\'язкові поля');
-            }
+            // Базова перевірка
+            if(!data.role) return;
 
             btn.disabled = true;
-            btn.innerHTML = '<div class="loader w-6 h-6 border-2 border-white rounded-full"></div>';
+            btn.innerHTML = '<div class="loader mx-auto"></div>';
             tg.HapticFeedback.impactOccurred('heavy');
 
-            google.script.run.withSuccessHandler(() => {
+            try {
+                // Використовуємо URLSearchParams для форматування даних під Google Apps Script
+                const params = new URLSearchParams();
+                for (const key in data) params.append(key, data[key]);
+
+                await fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Важливо для Google Scripts
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+
+                // Оскільки mode 'no-cors' не повертає статус, вважаємо успіхом
                 tg.HapticFeedback.notificationOccurred('success');
                 form.classList.add('hidden');
                 document.getElementById('success').classList.remove('hidden');
-            }).processForm(formData);
+            } catch (error) {
+                console.error(error);
+                alert("Помилка відправки. Перевірте з'єднання.");
+                btn.disabled = false;
+                btn.innerHTML = '<span>Надіслати заявку</span>';
+            }
         }
     </script>
 </body>
